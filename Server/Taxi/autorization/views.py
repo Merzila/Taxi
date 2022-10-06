@@ -6,7 +6,7 @@ from .controller import checking_correctness, coding_psw
 
 '''  В этом модуле описан Back-End для авторизации и регистрации пользователей '''
 
-def registration(requests, User=None, Phone=None, Name=None, Password=None, Password2 = None):
+def registration(request, User=None, Phone=None, Name=None, Password=None, Password2 = None):
 
     '''  Регистрация пользователя '''
 
