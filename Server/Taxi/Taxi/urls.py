@@ -26,8 +26,8 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('<str:lat1>,<str:long1>,<str:lat2>,<str:long2>', showroute, name='showroute'),
     path('', showmap, name='showmap'),
-    path('autorization/', autorization, name = 'autorization'),
-    path('registration/', registration, name='registration'),
+    path('autorization', autorization, name = 'autorization'),
+    path('registration', registration, name='registration'),
     path('converter/<str:address1>,<str:address2>', address_converter, name = 'converter'),
     path('get_distance/<str:pickup_lat>,<str:pickup_lon>,<str:dropoff_lat>,<str:dropoff_lon>', get_distance, name='get_distance'),
     path('order/<str:id_user>,<str:time>,<str:ordered_time>,<str:tariff>,'+
