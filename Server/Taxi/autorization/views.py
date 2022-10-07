@@ -1,7 +1,7 @@
 from django.shortcuts import render
 from django.http import HttpResponse
 import sqlite3
-from .controller import checking_correctness
+from .controller import checking_correctness, hashing_password
 from django.views.decorators.csrf import csrf_exempt
 # Create your views here.
 
@@ -26,6 +26,8 @@ def registration(request):
         elif Password == None:
            return HttpResponse('Придумайте пароль!')
         else:
+
+            Password = hashing_password(Password)
 
             with sqlite3.connect('db.sqlite3') as db:
                 sql = db.cursor()
@@ -65,6 +67,8 @@ def autorization(request):
         if Password == None:
             return HttpResponse('Введите пароль!')
         else:
+
+            Password = hashing_password(Password)
 
             with sqlite3.connect('db.sqlite3') as db:
                 

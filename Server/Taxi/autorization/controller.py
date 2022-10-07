@@ -1,3 +1,5 @@
+import hashlib
+
 def checking_correctness(phone, name, password):
 
     '''  Проверка корректности введённых пользователем данных '''
@@ -27,3 +29,7 @@ def checking_correctness(phone, name, password):
             return 'Неправильный формат\n             пароля!'
     
     return phone
+
+def hashing_password(password):
+
+    return hashlib.md5(eval("b'"+f"{password}"+"'")).digest()
