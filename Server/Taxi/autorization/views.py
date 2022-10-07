@@ -1,14 +1,21 @@
 from django.shortcuts import render
 from django.http import HttpResponse
 import sqlite3
-from .controller import checking_correctness, coding_psw
+from .controller import checking_correctness
+from django.views.decorators.csrf import csrf_exempt
 # Create your views here.
 
 '''  В этом модуле описан Back-End для авторизации и регистрации пользователей '''
 
-def registration(request, User=None, Phone=None, Name=None, Password=None, Password2 = None):
+@csrf_exempt
+def registration(request):
 
     '''  Регистрация пользователя '''
+
+    User = 'autorization_' + request.POST.get('user', '')
+    Phone = request.POST.get('phone', '')
+    Name = request.POST.get('name', '')
+    Password = request.POST.get('password', '')
 
     Phone = checking_correctness(Phone, Name, Password)
 
@@ -18,10 +25,7 @@ def registration(request, User=None, Phone=None, Name=None, Password=None, Passw
            return HttpResponse('Укажите своё имя!')
         elif Password == None:
            return HttpResponse('Придумайте пароль!')
-        elif Password != Password2:
-            return HttpResponse('Пароли не совпадают!')
         else:
-            psw = coding_psw(Password)
 
             with sqlite3.connect('db.sqlite3') as db:
                 sql = db.cursor()
@@ -30,9 +34,9 @@ def registration(request, User=None, Phone=None, Name=None, Password=None, Passw
                 if info.fetchone() is None:
 
                     if User == 'autorization_taxist':
-                        sql.execute(f" INSERT INTO {User} (Phone, Name, Password, model_of_car, color_of_car, state_number) VALUES (?, ?, ?, ?, ?, ?) ", (Phone, Name, psw, 'None', 'None', 'None'))
+                        sql.execute(f" INSERT INTO {User} (Phone, Name, Password, model_of_car, color_of_car, state_number) VALUES (?, ?, ?, ?, ?, ?) ", (Phone, Name, Password, 'None', 'None', 'None'))
                     else:
-                        sql.execute(f" INSERT INTO {User} (Phone, Name, Password) VALUES (?, ?, ?) ", (Phone, Name, psw))
+                        sql.execute(f" INSERT INTO {User} (Phone, Name, Password) VALUES (?, ?, ?) ", (Phone, Name, Password))
 
                     value = sql.execute(f" SELECT * FROM {User} WHERE Phone={Phone} ").fetchall()
                     db.commit()
@@ -45,9 +49,15 @@ def registration(request, User=None, Phone=None, Name=None, Password=None, Passw
     else:
         return HttpResponse(f'{Phone}')
 
-def autorization(requests, User=None, Phone=None, Password=None):
+@csrf_exempt
+def autorization(request):
 
     '''  Авторизация и аутентификация пользователя '''
+
+    User = 'autorization_' + request.POST.get('user', '')
+    Phone = request.POST.get('phone', '')
+    Password = request.POST.get('password', '')
+
     Phone = checking_correctness(Phone, None, Password)
 
     if len(Phone) == 11:
@@ -55,8 +65,6 @@ def autorization(requests, User=None, Phone=None, Password=None):
         if Password == None:
             return HttpResponse('Введите пароль!')
         else:
-
-            psw = coding_psw(Password)
 
             with sqlite3.connect('db.sqlite3') as db:
                 
@@ -66,7 +74,7 @@ def autorization(requests, User=None, Phone=None, Password=None):
                 value = info1.fetchall()
                 
                 if value != []:
-                    if value[0][3] == psw:
+                    if value[0][3] == Password:
                         
                         return HttpResponse(f'OK,{value[0][0]},{value[0][1]},{value[0][2]}')
                     else:
