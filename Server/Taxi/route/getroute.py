@@ -41,5 +41,17 @@ def address_converter(requests, address1, address2):
 
 def coordinate_converter(coordinates):
     naminaltim = Nominatim(user_agent = 'user')
-    locations = naminaltim.reverse(coordinates)
-    return locations
+    address = naminaltim.reverse(coordinates)
+    return address
+
+def get_address(lat1,long1):
+    address = str(coordinate_converter(f"{lat1},{long1}")).split(", ")
+
+    for i in range(10):
+        try:
+            address[i] = int(address[i])
+            address = f"{address[i+1]} {address[i]}"
+        except:
+            pass
+
+    return address

@@ -1,6 +1,8 @@
 from django.shortcuts import render
 import folium
 from . import getroute
+from django.http import JsonResponse
+from django.template import loader
 
 def showmap(request):
     return render(request,'show_route/showmap.html')
@@ -19,4 +21,17 @@ def showroute(request,lat1,long1,lat2,long2):
     figure.render()
     context={'map':figure}
     
-    return render(request,'show_route/showroute.html',context)
+    map = loader.render_to_string('show_route/showroute.html', context, request)
+    address1 = getroute.get_address(lat1, long1)
+    address2 = getroute.get_address(lat2, long2)
+
+    data = {
+            "map": map,
+            "economy": round(route["distance"] * 1.5),
+            "comfort": round(route["distance"] * 2.5),
+            "buisness": round(route["distance"] * 5),
+            "address1": address1,
+            "address2": address2
+            }
+
+    return JsonResponse(data)
