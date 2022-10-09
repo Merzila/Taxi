@@ -30,6 +30,5 @@ urlpatterns = [
     path('registration', registration, name='registration'),
     path('converter/<str:address1>,<str:address2>', address_converter, name = 'converter'),
     path('get_distance/<str:pickup_lat>,<str:pickup_lon>,<str:dropoff_lat>,<str:dropoff_lon>', get_distance, name='get_distance'),
-    path('order/<str:id_user>,<str:time>,<str:ordered_time>,<str:tariff>,'+
-        '<str:payment>,<str:wishes>', order, name = 'create_order')
+    path('order', order, name = 'create_order')
     ]

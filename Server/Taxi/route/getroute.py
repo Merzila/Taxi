@@ -30,14 +30,14 @@ def get_route(pickup_lat, pickup_lon, dropoff_lat, dropoff_lon):
 
     return out
 
-def get_distance(request, pickup_lat, pickup_lon, dropoff_lat, dropoff_lon):
-    out = get_route(pickup_lat, pickup_lon, dropoff_lat, dropoff_lon)
-    return HttpResponse(f'{out["distance"]}')
+def get_distance(lat1, long1, lat2, lon2):
+    out = get_route(lat1, long1, lat2, lon2)
+    return f'{out["distance"]}'
 
-def address_converter(requests, address1, address2):
+def address_converter(address1, address2):
     loc1 = Nominatim(user_agent='my_request').geocode(address1)
     loc2 = Nominatim(user_agent='my_request').geocode(address2)
-    return HttpResponse(f'{loc1.latitude},{loc1.longitude},{loc2.latitude},{loc2.longitude}')
+    return f'{loc1.latitude},{loc1.longitude},{loc2.latitude},{loc2.longitude}'
 
 def coordinate_converter(coordinates):
     naminaltim = Nominatim(user_agent = 'user')
