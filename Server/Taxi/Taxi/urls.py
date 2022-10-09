@@ -20,7 +20,7 @@ from django.urls import path
 from route.views import showroute, showmap
 from route.getroute import address_converter, get_distance
 from autorization.views import autorization, registration
-from order.create_order import order
+from order.create_order import create_order
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -30,5 +30,5 @@ urlpatterns = [
     path('registration', registration, name='registration'),
     path('converter/<str:address1>,<str:address2>', address_converter, name = 'converter'),
     path('get_distance/<str:pickup_lat>,<str:pickup_lon>,<str:dropoff_lat>,<str:dropoff_lon>', get_distance, name='get_distance'),
-    path('order', order, name = 'create_order')
+    path('order', create_order, name = 'create_order')
     ]
