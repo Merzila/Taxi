@@ -13,20 +13,20 @@ def checking_correctness(phone, name, password):
         phone = phone.replace('+7', '8', 1)
 
     if len(phone) != 11 or phone[0] != '8':
-        return 'Неправильный формат\n     номера телефона!'
+        return 'Неправильный формат номера телефона!'
 
     for i in phone:
         if not (i in list_for_phone):
-            return 'Неправильный формат\n     номера телефона!'
+            return 'Неправильный формат номера телефона!'
 
     if name is not None:
         for i in name:
             if not (i in list_for_name):
-                return 'Неправильный формат\n             имени!'
+                return 'Неправильный формат имени!'
 
     for i in password:
         if not (i in list_for_password):
-            return 'Неправильный формат\n             пароля!'
+            return 'Неправильный формат пароля!'
     
     return phone
 

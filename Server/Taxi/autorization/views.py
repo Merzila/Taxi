@@ -40,13 +40,13 @@ def registration(request):
                     else:
                         sql.execute(f" INSERT INTO {User} (Phone, Name, Password) VALUES (?, ?, ?) ", (Phone, Name, Password))
 
-                    value = sql.execute(f" SELECT * FROM {User} WHERE Phone={Phone} ").fetchall()
+                    value = sql.execute(f" SELECT id FROM {User} WHERE Phone={Phone} ").fetchall()
                     db.commit()
 
-                    return HttpResponse(f'OK,{value[0][0]},{value[0][1]},{value[0][2]}')
+                    return HttpResponse(f'OK,{value[0][0]}')
 
                 else:
-                    return HttpResponse('Пользователь с таким\n   номером телефона\n уже зарегистрирован!')
+                    return HttpResponse('Пользователь с таким номером телефона уже зарегистрирован!')
 
     else:
         return HttpResponse(f'{Phone}')
@@ -80,7 +80,7 @@ def autorization(request):
                 if value != []:
                     if value[0][3] == Password:
                         
-                        return HttpResponse(f'OK,{value[0][0]},{value[0][1]},{value[0][2]}')
+                        return HttpResponse(f'OK,{value[0][0]}')
                     else:
                         return HttpResponse('Неверный пароль!')
 
