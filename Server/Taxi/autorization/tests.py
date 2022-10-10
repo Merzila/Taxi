@@ -4,7 +4,7 @@ import requests
 # Create your tests here.
 
 response = requests.post("http://127.0.0.1:8000/registration", data = {
-                                                                        "user": "users",
+                                                                        "user": "Users",
                                                                         "phone": "81234567890",
                                                                         "name": "admin",
                                                                         "password": "admin"
@@ -12,7 +12,7 @@ response = requests.post("http://127.0.0.1:8000/registration", data = {
 print(response.text)
 
 response = requests.post("http://127.0.0.1:8000/autorization", data = {
-                                                                        "user": "users",
+                                                                        "user": "Users",
                                                                         "phone": "81234567890",
                                                                         "password": "admin"
                                                                     })
