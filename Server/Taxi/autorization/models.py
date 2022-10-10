@@ -5,15 +5,16 @@ from django.db import models
 
 class Users(models.Model):
 
-    id = models.AutoField('id', primary_key=True)
     phone = models.IntegerField('Номер телефона')
     name = models.CharField('Имя', max_length=50)
-    password = models.CharField('Пароль', max_length=50)
+    password = models.BinaryField('Пароль')
+
+    def __str__(self):
+        return self.phone
 
 
 class Taxist(models.Model):
 
-    id = models.AutoField('id', primary_key=True)
     phone = models.IntegerField('Номер телефона')
     name = models.CharField('Имя', max_length=50)
     password = models.CharField('Пароль', max_length=50)
@@ -23,4 +24,4 @@ class Taxist(models.Model):
     
 
     def __str__(self):
-        return self.id
+        return self.phone

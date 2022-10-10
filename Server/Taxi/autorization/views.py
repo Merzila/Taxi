@@ -3,6 +3,7 @@ from django.http import HttpResponse
 import sqlite3
 from .controller import checking_correctness, hashing_password
 from django.views.decorators.csrf import csrf_exempt
+from .models import Users
 # Create your views here.
 
 '''  В этом модуле описан Back-End для авторизации и регистрации пользователей '''
@@ -12,80 +13,69 @@ def registration(request):
 
     '''  Регистрация пользователя '''
 
-    User = 'autorization_' + request.POST.get('user', '')
-    Phone = request.POST.get('phone', '')
-    Name = request.POST.get('name', '')
-    Password = request.POST.get('password', '')
+    user = request.POST.get('user', '')
+    phone = request.POST.get('phone', '')
+    name = request.POST.get('name', '')
+    password = request.POST.get('password', '')
 
-    Phone = checking_correctness(Phone, Name, Password)
+    phone = checking_correctness(phone, name, password)
 
-    if len(Phone) == 11:
+    if len(phone) == 11:
 
-        if Name == None:
+        if name == None:
            return HttpResponse('Укажите своё имя!')
-        elif Password == None:
+        elif password == None:
            return HttpResponse('Придумайте пароль!')
         else:
 
-            Password = hashing_password(Password)
+            password = hashing_password(password)
 
-            with sqlite3.connect('db.sqlite3') as db:
-                sql = db.cursor()
-                info = sql.execute(f" SELECT Phone FROM {User} WHERE Phone={Phone} ")
-            
-                if info.fetchone() is None:
+            try:
+                eval(f'{user}').objects.get(phone = phone)
 
-                    if User == 'autorization_taxist':
-                        sql.execute(f" INSERT INTO {User} (Phone, Name, Password, model_of_car, color_of_car, state_number) VALUES (?, ?, ?, ?, ?, ?) ", (Phone, Name, Password, 'None', 'None', 'None'))
-                    else:
-                        sql.execute(f" INSERT INTO {User} (Phone, Name, Password) VALUES (?, ?, ?) ", (Phone, Name, Password))
+                return HttpResponse('Пользователь с таким номером телефона уже зарегистрирован!')
 
-                    value = sql.execute(f" SELECT id FROM {User} WHERE Phone={Phone} ").fetchall()
-                    db.commit()
+            except:
 
-                    return HttpResponse(f'OK,{value[0][0]}')
+                u = eval(f'{user}').objects.create(phone = phone, name = name, password = password)
 
-                else:
-                    return HttpResponse('Пользователь с таким номером телефона уже зарегистрирован!')
+                return HttpResponse(f'OK,{u.pk}')
 
     else:
-        return HttpResponse(f'{Phone}')
+        return HttpResponse(f'{phone}')
 
 @csrf_exempt
 def autorization(request):
 
     '''  Авторизация и аутентификация пользователя '''
 
-    User = 'autorization_' + request.POST.get('user', '')
-    Phone = request.POST.get('phone', '')
-    Password = request.POST.get('password', '')
+    user = request.POST.get('user', '')
+    phone = request.POST.get('phone', '')
+    password = request.POST.get('password', '')
 
-    Phone = checking_correctness(Phone, None, Password)
+    phone = checking_correctness(phone, None, password)
 
-    if len(Phone) == 11:
+    if len(phone) == 11:
 
-        if Password == None:
+        if password == None:
             return HttpResponse('Введите пароль!')
         else:
 
-            Password = hashing_password(Password)
+            password = hashing_password(password)
 
-            with sqlite3.connect('db.sqlite3') as db:
+            try:
+                u = eval(f'{user}').objects.get(phone = phone)
                 
-                sql = db.cursor()
-            
-                info1 = sql.execute(f" SELECT * FROM {User} WHERE Phone={Phone}")
-                value = info1.fetchall()
-                
-                if value != []:
-                    if value[0][3] == Password:
-                        
-                        return HttpResponse(f'OK,{value[0][0]}')
-                    else:
-                        return HttpResponse('Неверный пароль!')
+                print(u.password, type(u.password))
+                print(password, type(u.password))
 
+                if u.password == password:
+                    return HttpResponse(f'OK,{u.pk}')
                 else:
-                   return HttpResponse('Такого пользователя не существует!')
+                    return HttpResponse('Неверный пароль!')
+
+            except:
+                return HttpResponse('Такого пользователя не существует!')
 
     else:
-        return HttpResponse(f'{Phone}')
+        return HttpResponse(f'{phone}')
