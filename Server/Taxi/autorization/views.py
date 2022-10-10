@@ -65,9 +65,6 @@ def autorization(request):
 
             try:
                 u = eval(f'{user}').objects.get(phone = phone)
-                
-                print(u.password, type(u.password))
-                print(password, type(u.password))
 
                 if u.password == password:
                     return HttpResponse(f'OK,{u.pk}')
