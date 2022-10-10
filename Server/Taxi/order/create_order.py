@@ -1,31 +1,29 @@
-from django.http import HttpResponse
-import sqlite3, datetime
-from route.getroute import get_distance, address_converter
-from django.views.decorators.csrf import csrf_exempt
-from route.views import get_map
+import datetime
+from route.getroute import get_distance
+from .models import Order
 
-class Order():
-    def __init__(self, *args, **kwargs):
-        pass
-
-@csrf_exempt
-def create_order(request):
-    id_user = request.POST.get('id_user', '')
-    address_start = request.POST.get('address_start', '')
-    address_end = request.POST.get('address_end', '')
-    ordered_time = request.POST.get('ordered_time', '')
-    tariff = request.POST.get('tariff', '')
-    payment = request.POST.get('payment', '')
-    wishes = request.POST.get('wishes', '')
-    time_of_order = str(datetime.datetime.now())[:-7]
-    coordinates = address_converter(address_start, address_end).split(",")
-    distance = get_distance(coordinates[0], coordinates[1], coordinates[2], coordinates[3])
-    print(id_user, ordered_time, address_start, address_end, distance, time_of_order, tariff, payment, wishes)
-    #with sqlite3.connect('db.sqlite3') as db:
-    #    sql = db.cursor()
-    #    sql.execute(f'INSERT INTO order_order VALUES ({id_user}, {id_taxist}, {time}, {address1},'+
-    #                f'{address2}, {ordered_time}, {tariff}, {payment}, {wishes}, {distance}, {cost})')
-    #    db.commit()
-    map = get_map(request, coordinates[0], coordinates[1], coordinates[2], coordinates[3])
+def create_order(id_user, address_start, address_end, ordered_time, tariff, payment, wishes, coordinates, id_taxist = None):
     
-    return HttpResponse(map)
+    distance = float(get_distance(coordinates[0], coordinates[1], coordinates[2], coordinates[3]))
+
+    if tariff == 'economy':
+        coefficient = 1.5
+    elif tariff == 'comfort':
+        coefficient = 2.5
+    else:
+        coefficient = 5
+
+
+    order = Order.objects.create(
+                        id_user = id_user,
+                        id_taxist = id_taxist,
+                        address_start = address_start,
+                        address_end = address_end,
+                        ordered_time = ordered_time,
+                        tariff = tariff,
+                        payment = payment,
+                        wishes = wishes,
+                        time_of_order = str(datetime.datetime.now())[:-7],
+                        distance = distance,
+                        cost = distance * coefficient * 20
+                        )

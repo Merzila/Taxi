@@ -4,7 +4,7 @@ import requests
 
 response = requests.post('http://127.0.0.1:8000/order', data = {
                                                                 "id_user": 1,
-                                                                "address_start": "улица Фёдора Лыткина Томск",
+                                                                "address_start": "улица Фёдора Лыткина 8 Томск",
                                                                 "address_end": "улица Горького 12 Мыски",
                                                                 "ordered_time": "22:00",
                                                                 "tariff": "comfort",

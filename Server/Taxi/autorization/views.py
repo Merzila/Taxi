@@ -3,7 +3,7 @@ from django.http import HttpResponse
 import sqlite3
 from .controller import checking_correctness, hashing_password
 from django.views.decorators.csrf import csrf_exempt
-from .models import Users
+from .models import User
 # Create your views here.
 
 '''  В этом модуле описан Back-End для авторизации и регистрации пользователей '''

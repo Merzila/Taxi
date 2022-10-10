@@ -3,7 +3,7 @@ from django.db import models
 # Create your models here.
 
 
-class Users(models.Model):
+class User(models.Model):
 
     phone = models.IntegerField('Номер телефона')
     name = models.CharField('Имя', max_length=50)
