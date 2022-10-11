@@ -1,6 +1,8 @@
 from django.http import HttpResponse
 from .models import Order
 
+# Ожидание клиентом ответа от таксистов. (Поиск таксистов)
+
 def expectation_of_taxist(request):
     id_order = int(request.GET.get('id_order', ''))
 

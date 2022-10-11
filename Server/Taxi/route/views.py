@@ -5,9 +5,14 @@ from django.http import JsonResponse
 from django.template import loader
 
 def showmap(request):
+    # Показ карты без маршрута
     return render(request,'show_route/showmap.html')
 
+
 def showroute(request, lat1, long1, lat2, long2):
+
+    # Показ карты с маршрутом
+
     address1 = getroute.get_address(lat1, long1)
     address2 = getroute.get_address(lat2, long2)
     route=getroute.get_route(lat1,long1,lat2,long2)
@@ -24,7 +29,11 @@ def showroute(request, lat1, long1, lat2, long2):
 
     return JsonResponse(data)
 
+
 def get_map(request, lat1, long1, lat2, long2, route = None):
+
+    # Получение карты с маршрутом
+
     figure = folium.Figure()
     lat1,long1,lat2,long2=float(lat1),float(long1),float(lat2),float(long2)
 

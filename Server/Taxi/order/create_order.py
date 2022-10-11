@@ -2,6 +2,8 @@ import datetime
 from route.getroute import get_distance
 from .models import Order
 
+# Cоздание заказа
+
 def create_order(id_user, address_start, address_end, ordered_time, tariff, payment, wishes, coordinates, id_taxist = None):
     
     distance = float(get_distance(coordinates[0], coordinates[1], coordinates[2], coordinates[3]))

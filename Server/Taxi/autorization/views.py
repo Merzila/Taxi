@@ -4,14 +4,13 @@ import sqlite3
 from .controller import checking_correctness, hashing_password
 from django.views.decorators.csrf import csrf_exempt
 from .models import User
-# Create your views here.
 
-'''  В этом модуле описан Back-End для авторизации и регистрации пользователей '''
+# Авторизация и регистрация пользователей
 
 @csrf_exempt
 def registration(request):
 
-    '''  Регистрация пользователя '''
+    # Регистрация пользователя
 
     user = request.POST.get('user', '')
     phone = request.POST.get('phone', '')
@@ -47,7 +46,7 @@ def registration(request):
 @csrf_exempt
 def autorization(request):
 
-    '''  Авторизация и аутентификация пользователя '''
+    # Авторизация и аутентификация пользователя
 
     user = request.POST.get('user', '')
     phone = request.POST.get('phone', '')

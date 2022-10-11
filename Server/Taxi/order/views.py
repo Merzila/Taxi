@@ -9,6 +9,8 @@ from django.http import JsonResponse
 
 @csrf_exempt
 def view(request):
+    
+    # Создание заказа и его запись в БД
 
     id_user = request.POST.get('id_user', '')
     address_start = request.POST.get('address_start', '')

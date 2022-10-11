@@ -2,7 +2,7 @@ import hashlib
 
 def checking_correctness(phone, name, password):
 
-    '''  Проверка корректности введённых пользователем данных '''
+    # Проверка корректности введённых пользователем данных
 
     with open('autorization/alphabet for authorization.txt', encoding = 'utf-8') as alp:
         list_for_phone = alp.readline().split()[1]
@@ -31,5 +31,7 @@ def checking_correctness(phone, name, password):
     return phone
 
 def hashing_password(password):
+
+    # Хеширование пароля
 
     return hashlib.md5(eval("b'"+f"{password}"+"'")).digest()

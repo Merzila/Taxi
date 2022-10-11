@@ -7,7 +7,12 @@ from geopy.geocoders import Nominatim
 from django.http import HttpResponse
 from geopy import Nominatim
 
+# Обработка данных маршрута
+
 def get_route(pickup_lat, pickup_lon, dropoff_lat, dropoff_lon):
+
+    # Создание маршрута
+
     loc = "{},{};{},{}".format(pickup_lon, pickup_lat, dropoff_lon, dropoff_lat)
     url = "http://router.project-osrm.org/route/v1/driving/"
     r = requests.get(url + loc) 
@@ -24,27 +29,40 @@ def get_route(pickup_lat, pickup_lon, dropoff_lat, dropoff_lon):
            'end_point':end_point,
            'distance':distance
           }
-          
-    with open('route.json', 'w') as f:
-        json.dump(out, f)
 
     return out
 
+
 def get_distance(lat1, long1, lat2, lon2):
+
+    # Получение дистанции маршрута
+
     out = get_route(lat1, long1, lat2, lon2)
     return f'{out["distance"]}'
 
+
 def address_converter(address1, address2):
+
+    # Перевод адреса в координаты
+
     loc1 = Nominatim(user_agent='my_request').geocode(address1)
     loc2 = Nominatim(user_agent='my_request').geocode(address2)
     return f'{loc1.latitude},{loc1.longitude},{loc2.latitude},{loc2.longitude}'
 
+
 def coordinate_converter(coordinates):
+
+    # Перевод координат в адрес
+
     naminaltim = Nominatim(user_agent = 'user')
     address = naminaltim.reverse(coordinates)
     return address
 
+
 def get_address(lat1,long1):
+
+    # Фильтр полного адреса. Получение улицы и номера дома.
+
     address = str(coordinate_converter(f"{lat1},{long1}")).split(", ")
 
     for i in range(10):
