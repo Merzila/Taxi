@@ -3,7 +3,7 @@ from .create_order import create_order
 from route.getroute import address_converter
 from route.views import get_map
 from django.views.decorators.csrf import csrf_exempt
-from django.http import HttpResponse
+from django.http import JsonResponse
 
 # Create your views here.
 
@@ -19,8 +19,12 @@ def view(request):
     wishes = request.POST.get('wishes', '')
 
     coordinates = address_converter(address_start, address_end).split(",")
-    create_order(id_user, address_start, address_end, ordered_time, tariff, payment, wishes, coordinates)
+    order = create_order(id_user, address_start, address_end, ordered_time, tariff, payment, wishes, coordinates)
+    order.save()
 
     map = get_map(request, coordinates[0], coordinates[1], coordinates[2], coordinates[3])
-    
-    return HttpResponse("OK")
+
+    return JsonResponse({
+                        "map": map,
+                        "id": order.pk
+                        })

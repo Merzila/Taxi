@@ -21,6 +21,8 @@ from route.views import showroute, showmap
 from route.getroute import address_converter, get_distance
 from autorization.views import autorization, registration
 from order.views import view
+from order.expectation_of_taxist import expectation_of_taxist
+from order.acceptance_of_order import acceptance_of_order
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -30,5 +32,7 @@ urlpatterns = [
     path('registration', registration, name='registration'),
     path('converter/<str:address1>,<str:address2>', address_converter, name = 'converter'),
     path('get_distance/<str:pickup_lat>,<str:pickup_lon>,<str:dropoff_lat>,<str:dropoff_lon>', get_distance, name='get_distance'),
-    path('order', view, name = 'create_order')
+    path('order', view, name = 'create_order'),
+    path('order/expectation', expectation_of_taxist, name = 'expectation_of_taxist'),
+    path('order/response', acceptance_of_order, name = 'acceptance_of_order')
     ]

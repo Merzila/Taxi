@@ -14,16 +14,19 @@ def create_order(id_user, address_start, address_end, ordered_time, tariff, paym
         coefficient = 5
 
 
-    order = Order.objects.create(
-                        id_user = id_user,
-                        id_taxist = id_taxist,
-                        address_start = address_start,
-                        address_end = address_end,
-                        ordered_time = ordered_time,
-                        tariff = tariff,
-                        payment = payment,
-                        wishes = wishes,
-                        time_of_order = str(datetime.datetime.now())[:-7],
-                        distance = distance,
-                        cost = distance * coefficient * 20
-                        )
+    order = Order(
+                    id_user = id_user,
+                    id_taxist = id_taxist,
+                    address_start = address_start,
+                    address_end = address_end,
+                    ordered_time = ordered_time,
+                    tariff = tariff,
+                    payment = payment,
+                    wishes = wishes,
+                    time_of_order = str(datetime.datetime.now())[:-7],
+                    distance = distance,
+                    cost = distance * coefficient * 20,
+                    status = 'expectation'
+                )
+
+    return order

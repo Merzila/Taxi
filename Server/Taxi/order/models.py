@@ -15,6 +15,7 @@ class Order(models.Model):
     wishes = models.CharField('Пожелания', max_length = 50)
     distance = models.FloatField('Расстояние, км')
     cost = models.FloatField('Стоимость, руб')
+    status = models.CharField('Статус', max_length = 15)
 
     def __str__(self):
-        return self.pk
+        return str(self.pk)
