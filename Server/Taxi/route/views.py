@@ -20,9 +20,9 @@ def showroute(request, lat1, long1, lat2, long2):
 
     data = {
             "map": map,
-            "economy": round(route["distance"] * 1.5),
-            "comfort": round(route["distance"] * 2.5),
-            "buisness": round(route["distance"] * 5),
+            "economy": round(route["distance"] * 1.5 * 20),
+            "comfort": round(route["distance"] * 2.5 * 20),
+            "buisness": round(route["distance"] * 5 * 20),
             "address1": address1,
             "address2": address2
             }

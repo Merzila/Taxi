@@ -30,7 +30,7 @@ def response_to_expectation():
 
     # Тестирование отклика на заказ
 
-    response = requests.post('http://127.0.0.1:8000/order/response', data = {'id_order': 7})
+    response = requests.post('http://127.0.0.1:8000/order/response', data = {'id_order': 7, 'id_taxist': 1})
     print(response.text)
 
 
