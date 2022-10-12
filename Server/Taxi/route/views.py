@@ -3,6 +3,7 @@ import folium
 from . import getroute
 from django.http import JsonResponse
 from django.template import loader
+from .models import Route
 
 def showmap(request):
     # Показ карты без маршрута
@@ -11,26 +12,34 @@ def showmap(request):
 
 def showroute(request, lat1, long1, lat2, long2):
 
-    # Показ карты с маршрутом
+    # Представление маршрута
 
-    address1 = getroute.get_address(lat1, long1)
-    address2 = getroute.get_address(lat2, long2)
-    route=getroute.get_route(lat1,long1,lat2,long2)
-    map = get_map(request, lat1, long1, lat2, long2, route)
+    address_start = getroute.get_address(lat1, long1)
+    address_end = getroute.get_address(lat2, long2)
+    route = getroute.get_route(lat1,long1,lat2,long2)
+    map = get_map(lat1, long1, lat2, long2, route)
+
+    Route.objects.create(route = route['route'],
+                        coordinate_start = route['start_point'],
+                        coordinate_end = route['end_point'],
+                        distance = route['distance'],
+                        address_start = address_start,
+                        address_end = address_end,
+                        map = map)
 
     data = {
             "map": map,
             "economy": round(route["distance"] * 1.5 * 20),
             "comfort": round(route["distance"] * 2.5 * 20),
             "buisness": round(route["distance"] * 5 * 20),
-            "address1": address1,
-            "address2": address2
+            "address1": address_start,
+            "address2": address_end
             }
 
     return JsonResponse(data)
 
 
-def get_map(request, lat1, long1, lat2, long2, route = None):
+def get_map(lat1, long1, lat2, long2, route = None):
 
     # Получение карты с маршрутом
 
@@ -50,6 +59,6 @@ def get_map(request, lat1, long1, lat2, long2, route = None):
     figure.render()
     context={'map':figure}
     
-    map = loader.render_to_string('show_route/showroute.html', context, request)
+    map = loader.render_to_string('show_route/showroute.html', context)
 
     return map

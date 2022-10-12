@@ -16,6 +16,7 @@ class Order(models.Model):
     distance = models.FloatField('Расстояние, км')
     cost = models.FloatField('Стоимость, руб')
     status = models.CharField('Статус', max_length = 15)
+    map = models.TextField('Карта с маршрутом, html')
 
     def __str__(self):
         return str(self.pk)
