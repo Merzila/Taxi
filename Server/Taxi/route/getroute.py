@@ -1,11 +1,9 @@
-from tkinter import W
 import requests
-import json
 import polyline
 import folium
 from geopy.geocoders import Nominatim
-from django.http import HttpResponse
 from geopy import Nominatim
+from django.template import loader
 
 # Обработка данных маршрута
 
@@ -24,23 +22,14 @@ def get_route(pickup_lat, pickup_lon, dropoff_lat, dropoff_lon):
     end_point = [res['waypoints'][1]['location'][1], res['waypoints'][1]['location'][0]]
     distance = round(res['routes'][0]['distance'] / 1000, 2)
 
-    out = {
+    route = {
             'route': routes,
             'start_point': start_point,
             'end_point': end_point,
             'distance': distance
           }
 
-    return out
-
-
-def get_distance(lat1, long1, lat2, lon2):
-
-    # Получение дистанции маршрута
-
-    out = get_route(lat1, long1, lat2, lon2)
-    return f'{out["distance"]}'
-
+    return route
 
 def address_converter(address1, address2):
 
@@ -74,3 +63,27 @@ def get_address(lat1,long1):
             pass
 
     return address
+
+def get_map(lat1, long1, lat2, long2, route = None):
+
+    # Получение карты с маршрутом
+
+    figure = folium.Figure()
+    lat1,long1,lat2,long2=float(lat1),float(long1),float(lat2),float(long2)
+
+    if route == None:
+        route = get_route(lat1,long1,lat2,long2)
+        
+    m = folium.Map(location=[(route['start_point'][0]),
+                                 (route['start_point'][1])], 
+                       zoom_start=10)
+    m.add_to(figure)
+    folium.PolyLine(route['route'],weight=8,color='blue',opacity=0.6).add_to(m)
+    folium.Marker(location=route['start_point'],icon=folium.Icon(icon='play', color='green')).add_to(m)
+    folium.Marker(location=route['end_point'],icon=folium.Icon(icon='stop', color='red')).add_to(m)
+    figure.render()
+    context={'map':figure}
+    
+    map = loader.render_to_string('show_route/showroute.html', context)
+
+    return map

@@ -7,7 +7,7 @@ from django.http import HttpResponse
 @csrf_exempt
 def acceptance_of_order(request):
     id_order = int(request.POST.get('id_order', ''))
-    id_taxist = int(request.POST.get('id_order', ''))
+    id_taxist = int(request.POST.get('id_taxist', ''))
 
     order = Order.objects.get(pk = id_order)
     order.status = 'accepted'

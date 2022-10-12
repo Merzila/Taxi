@@ -15,14 +15,17 @@ def test_of_create_order():
                                                                     "payment": "MirPay",
                                                                     "wishes": "Маленький ребёнок"
                                                                     })
-    print(response.text)
+
+    id_order = response.json()['id_order']
+    print(id_order)
+    return id_order
 
 
-def test_of_expectation():
+def test_of_expectation(id_order):
 
     # Тестирование ожидания(поиска) таксиста
 
-    response = requests.get('http://127.0.0.1:8000/order/expectation', params = {"id_order": 11})
+    response = requests.get('http://127.0.0.1:8000/order/expectation', params = {"id_order": id_order})
     print(response.text)
 
 
@@ -30,10 +33,10 @@ def response_to_expectation():
 
     # Тестирование отклика на заказ
 
-    response = requests.post('http://127.0.0.1:8000/order/response', data = {'id_order': 7, 'id_taxist': 1})
+    response = requests.post('http://127.0.0.1:8000/order/response', data = {'id_order': 1, 'id_taxist': 1})
     print(response.text)
 
 
 
-test_of_create_order()
-test_of_expectation()
+id_order = test_of_create_order()
+test_of_expectation(id_order)
