@@ -16,21 +16,20 @@ Including another URLconf
 from audioop import add
 from django.contrib import admin
 from django.urls import path
+from order.controller import order_response
 
-from route.views import showroute, showmap
-from route.getroute import address_converter
+from route.views import get_view_map, get_view_route
 from autorization.views import autorization, registration
-from order.views import view
-from order.expectation_of_taxist import expectation_of_taxist
-from order.acceptance_of_order import acceptance_of_order
+from order.views import create_order
+from order.controller import order_response, cancel_of_order
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('<str:lat1>,<str:long1>,<str:lat2>,<str:long2>', showroute, name='showroute'),
-    path('', showmap, name='showmap'),
+    path('route', get_view_route, name='get_view_route'),
+    path('', get_view_map, name='get_view_map'),
     path('autorization', autorization, name = 'autorization'),
     path('registration', registration, name='registration'),
-    path('order', view, name = 'create_order'),
-    path('order/expectation', expectation_of_taxist, name = 'expectation_of_taxist'),
-    path('order/response', acceptance_of_order, name = 'acceptance_of_order')
+    path('order', create_order, name = 'create_order'),
+    path('order/response', order_response, name = 'acceptance_of_order'),
+    path('order/cancel', cancel_of_order, name = 'cancel of order')
     ]

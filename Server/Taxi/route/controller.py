@@ -4,12 +4,13 @@ import folium
 from geopy.geocoders import Nominatim
 from geopy import Nominatim
 from django.template import loader
+from .models import Route
 
-# Обработка данных маршрута
+# Работа с маршрутом и его составляющими
 
-def get_route(pickup_lat, pickup_lon, dropoff_lat, dropoff_lon):
+def get_point_of_route(pickup_lat, pickup_lon, dropoff_lat, dropoff_lon):
 
-    # Создание маршрута
+    # Получение списка всех точек маршртуа и дистанции
 
     loc = "{},{};{},{}".format(pickup_lon, pickup_lat, dropoff_lon, dropoff_lat)
     url = "http://router.project-osrm.org/route/v1/driving/"
@@ -31,13 +32,37 @@ def get_route(pickup_lat, pickup_lon, dropoff_lat, dropoff_lon):
 
     return route
 
-def address_converter(address1, address2):
 
-    # Перевод адреса в координаты
+def create_object_of_route(lat1, long1, lat2, long2):
 
-    loc1 = Nominatim(user_agent='my_request').geocode(address1)
-    loc2 = Nominatim(user_agent='my_request').geocode(address2)
-    return f'{loc1.latitude},{loc1.longitude},{loc2.latitude},{loc2.longitude}'
+    # Создание экземпляра класса 'Маршрут'
+
+    address_start = coordinate_converter(f'{lat1},{long1}')
+    address_end = coordinate_converter(f'{lat2},{long2}')
+
+    address_start = address_filter(address_start)
+    address_end = address_filter(address_end)
+
+    route = get_point_of_route(lat1,long1,lat2,long2)
+    map = create_map_with_route(lat1, long1, lat2, long2, route)
+
+    route = Route(route = route['route'],
+                  coordinate_start = route['start_point'],
+                  coordinate_end = route['end_point'],
+                  distance = route['distance'],
+                  address_start = address_start,
+                  address_end = address_end,
+                  map = map)
+
+    return route
+
+
+def address_converter(address):
+
+    # Перевод адресов в координаты
+
+    loc1 = Nominatim(user_agent='my_request').geocode(address)
+    return f'{loc1.latitude},{loc1.longitude}'
 
 
 def coordinate_converter(coordinates):
@@ -49,22 +74,22 @@ def coordinate_converter(coordinates):
     return address
 
 
-def get_address(lat1,long1):
+def address_filter(address):
 
     # Фильтр полного адреса. Получение улицы и номера дома.
 
-    address = str(coordinate_converter(f"{lat1},{long1}")).split(", ")
+    address = str(address).split(", ")
 
     for i in range(10):
         try:
             address[i] = int(address[i])
-            address = f"{address[i+1]} {address[i]}"
+            address_filter = f"{address[i+1]} {address[i]}"
         except:
             pass
 
-    return address
+    return address_filter
 
-def get_map(lat1, long1, lat2, long2, route = None):
+def create_map_with_route(lat1, long1, lat2, long2, route = None):
 
     # Получение карты с маршрутом
 
@@ -72,7 +97,7 @@ def get_map(lat1, long1, lat2, long2, route = None):
     lat1,long1,lat2,long2=float(lat1),float(long1),float(lat2),float(long2)
 
     if route == None:
-        route = get_route(lat1,long1,lat2,long2)
+        route = get_point_of_route(lat1,long1,lat2,long2)
         
     m = folium.Map(location=[(route['start_point'][0]),
                                  (route['start_point'][1])], 

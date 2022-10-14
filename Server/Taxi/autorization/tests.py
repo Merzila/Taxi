@@ -24,5 +24,5 @@ def test_login(user, phone, password):
                                                                         })
     print(response.text)
 
-test_reg("User", "81234567890", "admin", "admin")
-test_login("User", "81234567890", "admin")
+test_reg("Client", "81234567890", "admin", "admin")
+test_login("Client", "81234567890", "admin")

@@ -4,7 +4,7 @@ from django.db import models
 
 class Order(models.Model):
 
-    id_user = models.IntegerField('id заказчика')
+    id_client = models.IntegerField('id заказчика')
     id_taxist = models.IntegerField('id таксиста', null = True)
     time_of_order = models.CharField('Время заказа', max_length = 50)
     address_start = models.CharField('От куда', max_length = 50)

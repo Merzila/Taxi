@@ -7,36 +7,30 @@ def test_of_create_order():
     # Тестирование создания заказа
 
     response = requests.post('http://127.0.0.1:8000/order', data = {
-                                                                    "id_user": 1,
-                                                                    "address_start": "улица Фёдора Лыткина 8 Томск",
-                                                                    "address_end": "улица Горького 12 Мыски",
+                                                                    "id_client": 1,
+                                                                    "id_route": 2,
                                                                     "ordered_time": "22:00",
                                                                     "tariff": "comfort",
                                                                     "payment": "MirPay",
                                                                     "wishes": "Маленький ребёнок"
                                                                     })
 
-    id_order = response.json()['id_order']
-    print(id_order)
-    return id_order
-
-
-def test_of_expectation(id_order):
-
-    # Тестирование ожидания(поиска) таксиста
-
-    response = requests.get('http://127.0.0.1:8000/order/expectation', params = {"id_order": id_order})
     print(response.text)
 
 
-def response_to_expectation():
+def test_order_response():
 
-    # Тестирование отклика на заказ
+    response = requests.post('http://127.0.0.1:8000/order/response', data = {
+                                                                            'id_taxist': 1,
+                                                                            'id_order': 4,
+                                                                            'action': 'completed'
+                                                                            })
 
-    response = requests.post('http://127.0.0.1:8000/order/response', data = {'id_order': 1, 'id_taxist': 1})
     print(response.text)
 
+def test_cancel_of_order():
 
-
-id_order = test_of_create_order()
-test_of_expectation(id_order)
+    response = requests.post('http://127.0.0.1:8000/order/cancel', data = {'id_client': 1})
+    print(response.text)
+    
+test_order_response()

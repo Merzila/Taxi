@@ -3,7 +3,7 @@ from django.http import HttpResponse
 import sqlite3
 from .controller import checking_correctness, hashing_password
 from django.views.decorators.csrf import csrf_exempt
-from .models import User
+from .models import Client
 
 # Авторизация и регистрация пользователей
 
@@ -36,9 +36,9 @@ def registration(request):
 
             except:
 
-                u = eval(f'{user}').objects.create(phone = phone, name = name, password = password)
+                user = eval(f'{user}').objects.create(phone = phone, name = name, password = password)
 
-                return HttpResponse(f'OK,{u.pk}')
+                return HttpResponse(f'{user.pk}')
 
     else:
         return HttpResponse(f'{phone}')
@@ -63,10 +63,10 @@ def autorization(request):
             password = hashing_password(password)
 
             try:
-                u = eval(f'{user}').objects.get(phone = phone)
+                user = eval(f'{user}').objects.get(phone = phone)
 
-                if u.password == password:
-                    return HttpResponse(f'OK,{u.pk}')
+                if user.password == password:
+                    return HttpResponse(f'{user.pk}')
                 else:
                     return HttpResponse('Неверный пароль!')
 
