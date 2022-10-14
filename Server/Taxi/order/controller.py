@@ -12,8 +12,6 @@ def create_object_of_order(id_client, id_route, ordered_time, tariff, payment, w
     # Создание экземпляра класса 'Заказ'
 
     route = Route.objects.get(pk = id_route)
-    distance = route.distance
-    map = route.map
 
     if tariff == 'economy':
         coefficient = 1.5
@@ -26,17 +24,14 @@ def create_object_of_order(id_client, id_route, ordered_time, tariff, payment, w
     order = Order(
                     id_client = id_client,
                     id_taxist = id_taxist,
-                    address_start = route.address_start,
-                    address_end = route.address_end,
                     ordered_time = ordered_time,
                     tariff = tariff,
                     payment = payment,
                     wishes = wishes,
                     time_of_order = str(datetime.datetime.now())[:-7],
-                    distance = distance,
-                    cost = distance * coefficient * 20,
+                    cost = route.distance * coefficient * 20,
                     status = 'expectation',
-                    map = map
+                    route = route
                 )
 
     return order
@@ -64,6 +59,7 @@ def order_response(request):
     return HttpResponse(action)
     
 
+@csrf_exempt
 def cancel_of_order(request):
 
     # Отмена заказа пользователем
