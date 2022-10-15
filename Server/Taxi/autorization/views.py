@@ -1,6 +1,5 @@
 from django.shortcuts import render
 from django.http import HttpResponse
-import sqlite3
 from .controller import checking_correctness, hashing_password
 from django.views.decorators.csrf import csrf_exempt
 from .models import Client
@@ -17,31 +16,20 @@ def registration(request):
     name = request.POST.get('name', '')
     password = request.POST.get('password', '')
 
-    phone = checking_correctness(phone, name, password)
+    flag = checking_correctness(phone, name, password)
 
-    if len(phone) == 11:
+    if flag:
 
-        if name == None:
-           return HttpResponse('Укажите своё имя!')
-        elif password == None:
-           return HttpResponse('Придумайте пароль!')
-        else:
-
-            password = hashing_password(password)
-
-            try:
-                eval(f'{user}').objects.get(phone = phone)
-
-                return HttpResponse('Пользователь с таким номером телефона уже зарегистрирован!')
-
-            except:
-
-                user = eval(f'{user}').objects.create(phone = phone, name = name, password = password)
-
-                return HttpResponse(f'{user.pk}')
+        password = hashing_password(password)
+        try:
+            eval(f'{user}').objects.get(phone = phone)
+            return HttpResponse('Пользователь с таким номером телефона уже зарегистрирован!')
+        except:
+            user = eval(f'{user}').objects.create(phone = phone, name = name, password = password)
+            return HttpResponse(f'{user.pk}')
 
     else:
-        return HttpResponse(f'{phone}')
+        return HttpResponse(flag)
 
 @csrf_exempt
 def autorization(request):
@@ -52,26 +40,19 @@ def autorization(request):
     phone = request.POST.get('phone', '')
     password = request.POST.get('password', '')
 
-    phone = checking_correctness(phone, None, password)
+    flag = checking_correctness(phone, None, password)
 
-    if len(phone) == 11:
+    if flag:
 
-        if password == None:
-            return HttpResponse('Введите пароль!')
-        else:
-
-            password = hashing_password(password)
-
-            try:
-                user = eval(f'{user}').objects.get(phone = phone)
-
-                if user.password == password:
-                    return HttpResponse(f'{user.pk}')
-                else:
-                    return HttpResponse('Неверный пароль!')
-
-            except:
-                return HttpResponse('Такого пользователя не существует!')
+        password = hashing_password(password)
+        try:
+            user = eval(f'{user}').objects.get(phone = phone)
+            if user.password == password:
+                return HttpResponse(f'{user.pk}')
+            else:
+                return HttpResponse('Неверный пароль!')
+        except:
+            return HttpResponse('Такого пользователя не существует!')
 
     else:
-        return HttpResponse(f'{phone}')
+        return HttpResponse(flag)

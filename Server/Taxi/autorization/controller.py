@@ -8,11 +8,15 @@ def checking_correctness(phone, name, password):
         list_for_phone = alp.readline().split()[1]
         list_for_name = alp.readline().split()[1]
         list_for_password = alp.readline().split()[1]
-        
-    if phone[:2] == '+7':
-        phone = phone.replace('+7', '8', 1)
 
-    if len(phone) != 11 or phone[0] != '8':
+    if phone == None:
+        return 'Введите номер телефона!'
+    if name == None:
+        return 'Укажите своё имя!'
+    if password == None:
+        return 'Придумайте пароль!'
+
+    if len(phone) != 10:
         return 'Неправильный формат номера телефона!'
 
     for i in phone:
